@@ -25,8 +25,7 @@ pipeline {
 					
 					sh '''
 
-                        flake8 --exit-zero --format=pylint src > flake8.out
-
+                        python3 -m flake8 --exit-zero --format=pylint src > flake8.out
                         export PYTHONPATH=$WORKSPACE
                         bandit -r src -f custom --msg-template "{abspath}:{line}: [{test_id}] {msg}" > bandit.out
 
