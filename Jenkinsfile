@@ -16,5 +16,29 @@ pipeline {
                 stash name: 'code', includes: '**'
 			}
 		}
+		
+		stage ('Static Test') {
+			steps {
+				catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+					deleteDir()
+					unstash 'code'
+					
+					sh '''
+
+                        flake8 --exit-zero --format=pylint src > flake8.out
+
+                        export PYTHONPATH=$WORKSPACE
+                        bandit -r src -f custom --msg-template "{abspath}:{line}: [{test_id}] {msg}" > bandit.out
+
+                        exit 0
+					'''
+					recordIssues tools: [
+                        flake8(name: 'Flake8', pattern: 'flake8.out'),
+                        pyLint(name: 'Bandit', pattern: 'bandit.out')
+                    ]
+					
+				}			 
+			}		
+		}	
 	}
 }
