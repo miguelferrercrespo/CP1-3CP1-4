@@ -25,7 +25,8 @@ pipeline {
 					
 					sh '''
 
-                        python3 -m flake8 --exit-zero --format=pylint src > flake8.out
+                        flake8 --exit-zero --format=pylint src > flake8.out
+
                         export PYTHONPATH=$WORKSPACE
                         bandit -r src -f custom --msg-template "{abspath}:{line}: [{test_id}] {msg}" > bandit.out
 
@@ -38,6 +39,18 @@ pipeline {
 					
 				}			 
 			}		
-		}	
+		}
+		
+		stage ('Deploy') {
+            steps {
+                deleteDir()
+                unstash 'code'
+                sh '''
+                    set -e
+                    sam build
+                    sam deploy --config-env staging
+                '''
+            }
+        }
 	}
 }
