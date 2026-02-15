@@ -47,7 +47,7 @@ pipeline {
                 sh '''
                     set -e
                     sam build
-                    sam deploy --config-env staging
+                    sam deploy --config-env staging --resolve-s3
                 '''
             }
         }
