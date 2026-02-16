@@ -46,7 +46,7 @@ pipeline {
                 sh '''
                     set -e
                     sam build
-                    sam deploy --config-env staging --resolve-s3
+                    sam deploy --config-env staging --resolve-s3 --no-fail-on-empty-changeset
                 '''
             }
         }
