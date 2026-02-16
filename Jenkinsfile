@@ -70,7 +70,7 @@ pipeline {
 		}
 		stage('Promote') {
 			when {
-				expression { currentBuild.currentResult == 'SUCCESS' }
+				expression { currentBuild.currentResult: 'SUCCESS' }
 				}
 			steps {
 				deleteDir()
