@@ -24,7 +24,6 @@ pipeline {
 					unstash 'code'
 					
 					sh '''
-
                         python3 -m flake8 --exit-zero --format=pylint src > flake8.out
                         export PYTHONPATH=$WORKSPACE
                         bandit -r src -f custom --msg-template "{abspath}:{line}: [{test_id}] {msg}" > bandit.out
@@ -51,5 +50,24 @@ pipeline {
                 '''
             }
         }
+		
+		stage ('Rest Test') {
+			steps {
+				catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    deleteDir()
+                    unstash 'code'
+                    sh '''
+                        set -e
+                        export BASE_URL="$(aws cloudformation describe-stacks \
+                          --stack-name todo-list-aws-staging \
+                          --query "Stacks[0].Outputs[?OutputKey=='BaseUrlApi'].OutputValue" \
+                          --output text)"
+
+                        echo "BASE_URL=$BASE_URL"
+                        pytest test/integration/todoApiTest.py
+                    '''
+                }
+			}
+		}
 	}
 }
