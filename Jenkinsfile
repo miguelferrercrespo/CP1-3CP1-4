@@ -62,11 +62,29 @@ pipeline {
                           --stack-name todo-list-aws-staging \
                           --query "Stacks[0].Outputs[?OutputKey=='BaseUrlApi'].OutputValue" \
                           --output text)"
-
                         echo "BASE_URL=$BASE_URL"
                         python3 -m pytest test/integration/todoApiTest.py
                     '''
                 }
+			}
+		}
+		stage('Promote') {
+			when {
+				expression { currentBuild.currentResult == 'SUCCESS' }
+				}
+			steps {
+				deleteDir()
+				withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GH_USER', passwordVariable: 'GH_PAT')]) {
+					sh '''
+						set -e     
+						git clone --branch master https://$GH_USER:$GH_PAT@github.com/miguelferrercrespo/CP1-3CP1-4.git .
+						git config user.email "jenkins@local"
+						git config user.name  "jenkins"
+						git fetch origin develop
+						git merge --no-ff origin/develop -m "Release"
+						git push origin master
+					'''
+				}
 			}
 		}
 	}
