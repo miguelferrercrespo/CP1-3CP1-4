@@ -64,7 +64,7 @@ pipeline {
                           --output text)"
 
                         echo "BASE_URL=$BASE_URL"
-                        pytest test/integration/todoApiTest.py
+                        python3 -m pytest test/integration/todoApiTest.py
                     '''
                 }
 			}
