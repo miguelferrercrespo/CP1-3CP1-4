@@ -63,8 +63,9 @@ pipeline {
                           --query "Stacks[0].Outputs[?OutputKey=='BaseUrlApi'].OutputValue" \
                           --output text)"
                         echo "BASE_URL=$BASE_URL"
-                        python3 -m pytest test/integration/todoApiTest.py
+                        python3 -m pytest test/integration/todoApiTest.py --junitxml=result-rest.xml
                     '''
+					junit testResults: 'result-rest.xml', allowEmptyResults: true
                 }
 			}
 		}
