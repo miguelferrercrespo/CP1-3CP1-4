@@ -1,3 +1,4 @@
+
 pipeline {
 	agent any
 	
@@ -16,7 +17,7 @@ pipeline {
                 stash name: 'code', includes: '**'
 			}
 		}
-		
+		// Esto es una prueba
 		stage ('Static Test') {
 			steps {
 				catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {

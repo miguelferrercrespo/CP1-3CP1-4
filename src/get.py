@@ -5,6 +5,7 @@ import todoList
 
 def get(event, context):
     # create a response
+    #es una prueba
     item = todoList.get_item(event['pathParameters']['id'])
     if item:
         response = {
