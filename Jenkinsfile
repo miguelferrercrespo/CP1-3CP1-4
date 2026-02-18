@@ -18,7 +18,6 @@ pipeline {
                 stash name: 'code', includes: '**'
 			}
 		}
-		// Esto es una prueba
 		stage ('Static Test') {
 			steps {
 				catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
@@ -40,7 +39,6 @@ pipeline {
 				}
 			}
 		}
-
 		stage ('Deploy') {
             steps {
                 deleteDir()
@@ -52,7 +50,6 @@ pipeline {
                 '''
             }
         }
-
 		stage ('Rest Test') {
 			steps {
 				catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
