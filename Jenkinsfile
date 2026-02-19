@@ -82,6 +82,8 @@ pipeline {
 						git config user.name  "jenkins"
 						git fetch origin develop
 						git merge --no-ff origin/develop -m "Release"
+						git checkout --ours Jenkinsfile 
+						git add Jenkinsfile
 						git push origin master
 					'''
 				}
