@@ -92,9 +92,11 @@ pipeline {
 						git config user.name  "jenkins"
 						git fetch origin develop
 						git merge --no-ff origin/develop -m "Release" || true
-						git checkout --ours Jenkinsfile_agentes
-						git add Jenkinsfile_agentes
-						git commit -m "Keep master Jenkinsfile_agentes"
+						git checkout --ours Jenkinsfile_agentes || true
+						git add Jenkinsfile_agentes || true
+						if ! git diff --cached --quiet; then
+    							git commit -m "Keep master Jenkinsfile_agentes"
+						fi
 						git push origin master
 					'''
 				}
