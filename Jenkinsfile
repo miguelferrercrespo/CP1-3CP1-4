@@ -69,31 +69,22 @@ pipeline {
 			}
 		}
 		stage('Promote') {
-			when {
-				expression { currentBuild.currentResult == 'SUCCESS' }
-				}
+			when { branch 'develop' }
 			steps {
 				deleteDir()
 				withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GH_USER', passwordVariable: 'GH_PAT')]) {
-					sh '''
-						set -e
-						git clone --branch master https://$GH_USER:$GH_PAT@github.com/miguelferrercrespo/CP1-3CP1-4.git .
-						git config user.email "jenkins@local"
-						git config user.name  "jenkins"
-						git fetch origin develop
-						git merge --no-ff origin/develop -m "Release" || true
-						git checkout --ours Jenkinsfile 
-						git commit -m "Keep master Jenkinsfile"
-						if ! git diff --cached --quiet; then
-    							git commit -m "Keep master Jenkinsfile_agentes"
-						fi
-						git push origin master
-					'''
+				sh '''
+				set -e
+				git clone --branch master https://$GH_USER:$GH_PAT@github.com/miguelferrercrespo/CP1-3CP1-4.git .
+				git config user.email "jenkins@local"
+				git config user.name  "jenkins"
+				git merge origin/develop --no-ff -m "Release" -X ours
+				git push origin master
+				'''
 				}
 			}
 		}
-	}
-	 post {
+		post {
         always {
             cleanWs()
         }
