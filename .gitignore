@@ -6,3 +6,4 @@ pyenvunittests
 .coverage
 coverage.xml
 Jenkinsfile
+Jenkinsfile_agentes
