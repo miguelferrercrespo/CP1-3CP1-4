@@ -7,7 +7,7 @@ pipeline {
 
 	stages {
 		stage('Get Code') {
-			agent { label 'jenkins' }
+			agent { label 'principal' }
             steps {
 				deleteDir()
 				sh 'whoami && hostname'
@@ -44,7 +44,7 @@ pipeline {
 			}
 		}
 		stage ('Deploy') {
-			agent { label 'jenkins' }
+			agent { label 'principal' }
             steps {
                 deleteDir()
 				sh 'whoami && hostname'
@@ -77,7 +77,7 @@ pipeline {
 			}
 		}
 		stage('Promote') {
-			agent { label 'jenkins' }
+			agent { label 'principal' }
 			when {
 				expression { currentBuild.currentResult == 'SUCCESS' }
 				}
